@@ -1,0 +1,2 @@
+class ScaleFormatError(Exception):
+    pass
