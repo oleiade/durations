@@ -1,9 +1,11 @@
 from collections import namedtuple
+from itertools import izip
 from functools import partial
 from types import MethodType
 
 from durations.exceptions import ScaleFormatError
 from durations.scales import Scale
+from durations.constants import *
 
 
 DurationRepresentation = namedtuple(
@@ -25,17 +27,13 @@ class Duration(object):
         60.0
         >>> d.to_hours()
         0.02
-        >>> d = Duration('3 hours')
+        >>> d = Duration('2d 3 hours')
         >>> d.to_minutes()
-        180.0
+        3060.0
     """
     def __init__(self, representation, *args, **kwargs):
-        self.representation = self.parse(representation)
-
-        self.value = self.representation.value
-        self.scale = self.representation.scale
-
-        self.gen_conversion_methods()
+        self.parsed_durations = self.parse(representation)
+        self.seconds = self._compute_seconds_value()
 
     def __str__(self):
         return '<Duration {}>'.format(self.representation)
@@ -43,9 +41,51 @@ class Duration(object):
     def __repr__(self):
         return self.__str__()
 
+    def _compute_seconds_value(self):
+        seconds = 0
+
+        for duration in self.parsed_durations:
+            seconds += duration.value * duration.scale.conversion_unit
+
+        return seconds
+
+    def compute_char_token(self, c):
+        if c.isdigit():
+            return SCALE_TOKEN_DIGIT
+        elif c.isalpha():
+            return SCALE_TOKEN_ALPHA
+
+        return None
+
+    def extract_tokens(self, representation, sep=" "):
+        buff = ""
+        elements = []
+        last_index = 0
+        last_token = None
+
+        for index, c in enumerate(representation):
+            if c == sep:
+                elements.append(buff)
+                buff = ""
+                last_token = None
+            else:
+                token = self.compute_char_token(c)
+                if (token is not None and last_token is not None and token != last_token):
+                    elements.append(buff)
+                    buff = c
+                else:
+                    buff += c
+                last_token = token
+
+        # push the content left in representation
+        # in the elements list
+        elements.append(buff)
+
+        return zip(elements[::2], elements[1::2])
+
     def parse(self, representation):
-        """Parses a duration string representation to a
-        DurationRepresentation.
+        """Parses a duration string representation
+
 
         :param  representation: duration as a string, example: '1d' (day),
                                 '34minutes' (minutes), '485s' (seconds)...
@@ -54,42 +94,42 @@ class Duration(object):
         :returns: the parsed duration representation
         :rtype: DurationRepresentation
         """
-        i = 0
-        value_str = ''
-        scale_str = ''
+        elements = self.extract_tokens(representation)
 
-        while representation[i].isdigit():
-            value_str += representation[i]
-            i += 1
+        try:
+            scales = [DurationRepresentation(float(p[0]), Scale(p[1])) for p in elements]
+        except ValueError:
+            raise ScaleFormatError("Malformed duration representation: {}".format(representation))
 
-        scale_str = representation[i:]
-        scale = Scale(scale_str)
+        return scales
 
-        return DurationRepresentation(float(value_str), scale)
+    def to_centuries(self):
+        return round(self.seconds / float(SCALE_CENTURY_CONVERSION_UNIT), 2)
+
+    def to_decades(self):
+        return round(self.seconds / float(SCALE_DECADE_CONVERSION_UNIT), 2)
+
+    def to_years(self):
+        return round(self.seconds / float(SCALE_YEAR_CONVERSION_UNIT), 2)
+
+    def to_months(self):
+        return round(self.seconds / float(SCALE_MONTH_CONVERSION_UNIT), 2)
+
+    def to_weeks(self):
+        return round(self.seconds / float(SCALE_WEEK_CONVERSION_UNIT), 2)
+
+    def to_days(self):
+        return round(self.seconds / float(SCALE_DAY_CONVERSION_UNIT), 2)
+
+    def to_hours(self):
+        return round(self.seconds / float(SCALE_HOUR_CONVERSION_UNIT), 2)
+
+    def to_minutes(self):
+        return round(self.seconds / float(SCALE_MINUTE_CONVERSION_UNIT), 2)
 
     def to_seconds(self):
-        """Convert stored duration value to seconds units"""
-        return self.value * self.scale.conversion_unit
+        return round(self.seconds / float(SCALE_SECOND_CONVERSION_UNIT), 2)
 
-    def gen_conversion_methods(self):
-        """Generate durations conversion methods
-
-        Such as to_minutes, to_days, to_...
-        """
-        def convert_to(scale_representation, value=self.value):
-            conversion_units = self.scale.SCALES_CONVERTION_UNITS
-            conversion_unit = conversion_units[scale_representation.short]
-            seconds = self.value * self.scale.conversion_unit
-
-            return round(seconds / conversion_unit, 2)
-
-        for scale_representation in self.scale.SCALES:
-            method_name = 'to_' + scale_representation.long_plural
-            conversion_method = partial(convert_to, scale_representation)
-            setattr(
-                self,
-                method_name,
-                MethodType(conversion_method, self, type(self))
-            )
-
+    def to_miliseconds(self):
+        return round(self.seconds / float(SCALE_MILISECOND_CONVERSION_UNIT), 2)
 

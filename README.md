@@ -1,9 +1,27 @@
 durations
 =========
 
-A python durations parsing library. It allows to parse durations string representation such as '1d' or '1day' or '2 days' to
-a numeric value. As a default every value will be parsed as a second amount, but duration objects expose an api to convert
-this amount to any unit you may want: minutes, hours, years, centuries...
+## What it is?
+
+A python durations parsing library, providing a straight forward api to parse durations string representations
+such as '1d' or '1 day 2 hours' or '2 days 3h 26m 52s' and convert them to numeric value.
+
+## Why is it?
+
+It's easier, and more straight forward to read a duration in it's human form (at least for a human), as an expression
+rather than an amount. When writing configuration files for example:
+
+```yaml
+interval: 3 hours
+```
+
+is easier to understand for a human than
+
+```yaml
+interval: 10800  # seconds
+```
+
+right?
 
 ## Installation
 
@@ -24,8 +42,19 @@ $ python setup.py install
 ## Usage
 
 To parse a duration string representation, just instantiate a Duration object, and let it work for you.
-A Duration representation is formatted like : ``<value><scale>``. A value is an integer amount. A scale
-is a duration unit in it's short or long form (both singular and plural).
+A Duration representation is composed of as many ``<value><scale>`` pairs as you need to express it:
+* A value is an integer amount.
+* A scale is a duration unit in it's short or long form (both singular and plural).
+
+*examples*:
+
+```
+1d
+2 days
+2 days 4 hours
+4M 23d 6h
+...
+```
 
 #### Scales reference
 
@@ -48,7 +77,6 @@ Milisecond scale formats: 'ms', 'milisecond', 'miliseconds'
 >>> from durations import Duration
 
 >>> one_hour = '1hour'
->>> two_days = '2days'
 
 >>> one_hour_duration = Duration(one_hour)
 >>> one_hour_duration.to_seconds()
@@ -56,9 +84,13 @@ Milisecond scale formats: 'ms', 'milisecond', 'miliseconds'
 >>> one_hour_duration.to_minutes()
 60.0
 
->>> two_days_duration = Duration(two_days)
->>> two_days_duration.to_hours()
-48.0
->>> two_days_duration.to_seconds()
-172800.0
+
+# You can even compose durations in their short
+# and long variations
+>>> two_days_three_hours = '2 days 3h'
+>>> two_days_three_hours_duration = Duration(two_days_three_hours)
+>>> two_days_three_hours_duration.to_seconds()
+183600.0
+>>> two_days_three_hours_duration.to_hours()
+51.0
 ```

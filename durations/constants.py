@@ -1,5 +1,9 @@
 from collections import namedtuple
 
+# Scale parsing tokens definition
+SCALE_TOKEN_ALPHA = 0
+SCALE_TOKEN_DIGIT = 1
+
 
 ScaleRepresentation = namedtuple(
     'ScaleRepresentation',
