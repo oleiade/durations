@@ -27,9 +27,9 @@ class Duration(object):
         60.0
         >>> d.to_hours()
         0.02
-        >>> d = Duration('3 hours')
+        >>> d = Duration('2d 3 hours')
         >>> d.to_minutes()
-        180.0
+        3060.0
     """
     def __init__(self, representation, *args, **kwargs):
         self.parsed_durations = self.parse(representation)
