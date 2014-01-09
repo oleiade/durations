@@ -68,11 +68,14 @@ class Duration(object):
             # the content of the buffer in the elements list
             if c in separators:
                 if buff:
-                    elements.append(buff)
-                    buff = ""
+                    # If buffer content is a separator word, for example
+                    # "and", just ignore it
+                    if not buff.strip() in SEPARATOR_TOKENS:
+                        elements.append(buff)
 
                 # Anyway, reset buffer and last token marker
                 # to their zero value
+                buff = ""
                 last_token = None
             else:
                 token = self.compute_char_token(c)

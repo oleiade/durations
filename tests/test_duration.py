@@ -57,6 +57,23 @@ class TestDuration(unittest.TestCase):
         self.assertEqual(mixed_short_tokens, [('2', 'd'), ('24', 'h')])
         self.assertEqual(mixed_long_tokens, [('2', 'days'), ('24', 'hours')])
 
+    def test_extract_tokens_composed_with_and_valid_scale(self):
+        short_tokens = self.test_duration.extract_tokens('2d and 24h')
+        long_tokens = self.test_duration.extract_tokens('2days and 24hours')
+        spaced_short_tokens = self.test_duration.extract_tokens('2 d and 24 h')
+        spaced_long_tokens = self.test_duration.extract_tokens('2 days and 24 hours')
+        mixed_short_tokens = self.test_duration.extract_tokens('2d and 24 h')
+        mixed_long_tokens = self.test_duration.extract_tokens('2days and 24 hours')
+
+        self.assertEqual(short_tokens, [('2', 'd'), ('24', 'h')])
+        self.assertEqual(long_tokens, [('2', 'days'), ('24', 'hours')])
+
+        self.assertEqual(spaced_short_tokens, [('2', 'd'), ('24', 'h')])
+        self.assertEqual(spaced_long_tokens, [('2', 'days'), ('24', 'hours')])
+
+        self.assertEqual(mixed_short_tokens, [('2', 'd'), ('24', 'h')])
+        self.assertEqual(mixed_long_tokens, [('2', 'days'), ('24', 'hours')])
+
     def test_extract_tokens_simple_valid_scale_with_comma_separator(self):
         mixed_short_tokens = self.test_duration.extract_tokens('2d, 24 h')
         mixed_long_tokens = self.test_duration.extract_tokens('2days, 24 hours')
