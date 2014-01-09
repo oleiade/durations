@@ -57,16 +57,22 @@ class Duration(object):
 
         return None
 
-    def extract_tokens(self, representation, sep=" "):
+    def extract_tokens(self, representation, separators=SEPARATOR_CHARACTERS):
         buff = ""
         elements = []
         last_index = 0
         last_token = None
 
         for index, c in enumerate(representation):
-            if c == sep:
-                elements.append(buff)
-                buff = ""
+            # if separator character is found, push
+            # the content of the buffer in the elements list
+            if c in separators:
+                if buff:
+                    elements.append(buff)
+                    buff = ""
+
+                # Anyway, reset buffer and last token marker
+                # to their zero value
                 last_token = None
             else:
                 token = self.compute_char_token(c)
@@ -75,6 +81,7 @@ class Duration(object):
                     buff = c
                 else:
                     buff += c
+
                 last_token = token
 
         # push the content left in representation

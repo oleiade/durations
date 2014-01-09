@@ -1,5 +1,16 @@
 from collections import namedtuple
 
+# Scales separator chars and tokens
+SEPARATOR_CHARACTERS = (
+        " ",
+        "\t",
+        ","
+)
+
+SEPARATOR_TOKENS = (
+    'and',
+)
+
 # Scale parsing tokens definition
 SCALE_TOKEN_ALPHA = 0
 SCALE_TOKEN_DIGIT = 1
