@@ -57,12 +57,12 @@ class TestDuration(unittest.TestCase):
         self.assertEqual(mixed_short_tokens, [('2', 'd'), ('24', 'h')])
         self.assertEqual(mixed_long_tokens, [('2', 'days'), ('24', 'hours')])
 
-    # def test_extract_tokens_simple_valid_scale_with_comma_separator(self):
-    #     mixed_short_tokens = self.test_duration.extract_tokens('2d, 24 h')
-    #     mixed_long_tokens = self.test_duration.extract_tokens('2days, 24 hours')
+    def test_extract_tokens_simple_valid_scale_with_comma_separator(self):
+        mixed_short_tokens = self.test_duration.extract_tokens('2d, 24 h')
+        mixed_long_tokens = self.test_duration.extract_tokens('2days, 24 hours')
 
-    #     self.assertEqual(mixed_short_tokens, [('2', 'd'), ('24', 'h')])
-    #     self.assertEqual(mixed_long_tokens, [('2', 'days'), ('24', 'hours')])
+        self.assertEqual(mixed_short_tokens, [('2', 'd'), ('24', 'h')])
+        self.assertEqual(mixed_long_tokens, [('2', 'days'), ('24', 'hours')])
 
     def test_parse_simple_valid_scale(self):
         duration_representation = self.test_duration.parse('1d')
