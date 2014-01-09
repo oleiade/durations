@@ -45,14 +45,15 @@ To parse a duration string representation, just instantiate a Duration object, a
 A Duration representation is composed of as many ``<value><scale>`` pairs as you need to express it:
 * A value is an integer amount.
 * A scale is a duration unit in it's short or long form (both singular and plural).
+* Duration pairs can be separated with sep characters and expressions such as "," or "and"
 
 *examples*:
 
 ```
 1d
 2 days
-2 days 4 hours
-4M 23d 6h
+2 days and 4 hours
+4M, 22d and 6hours
 ...
 ```
 
@@ -87,7 +88,7 @@ Milisecond scale formats: 'ms', 'milisecond', 'miliseconds'
 
 # You can even compose durations in their short
 # and long variations
->>> two_days_three_hours = '2 days 3h'
+>>> two_days_three_hours = '2 days, 3h'
 >>> two_days_three_hours_duration = Duration(two_days_three_hours)
 >>> two_days_three_hours_duration.to_seconds()
 183600.0
