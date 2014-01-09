@@ -95,3 +95,7 @@ Milisecond scale formats: 'ms', 'milisecond', 'miliseconds'
 >>> two_days_three_hours_duration.to_hours()
 51.0
 ```
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/oleiade/durations/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
