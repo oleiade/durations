@@ -12,6 +12,12 @@ class TestDuration(unittest.TestCase):
     def tearDown(self):
         pass
 
+    def test_repr_has_valid_representation(self):
+        self.assertEqual(
+            self.test_duration.__repr__(),
+            '<Duration 1d>'
+        )
+
     def test_extract_tokens_simple_valid_scale(self):
         short_tokens = self.test_duration.extract_tokens('1h')
         long_tokens = self.test_duration.extract_tokens('1hour')

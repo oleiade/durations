@@ -32,7 +32,8 @@ class Duration(object):
         3060.0
     """
     def __init__(self, representation, *args, **kwargs):
-        self.parsed_durations = self.parse(representation)
+        self.representation = representation
+        self.parsed_durations = self.parse(self.representation)
         self.seconds = self._compute_seconds_value()
 
     def __str__(self):
