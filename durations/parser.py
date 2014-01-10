@@ -63,8 +63,8 @@ def extract_tokens(representation, separators=SEPARATOR_CHARACTERS):
                 # raise and InvalidTokenError
                 if not valid_token(buff):
                     raise InvalidTokenError(
-                        "Duration representation {} contains "
-                        "an invalid token: {}".format(representation, buff)
+                        "Duration representation {0} contains "
+                        "an invalid token: {1}".format(representation, buff)
                     )
 
                 # If buffer content is a separator word, for example
@@ -90,4 +90,4 @@ def extract_tokens(representation, separators=SEPARATOR_CHARACTERS):
     # in the elements list
     elements.append(buff)
 
-    return zip(elements[::2], elements[1::2])
+    return list(zip(elements[::2], elements[1::2]))

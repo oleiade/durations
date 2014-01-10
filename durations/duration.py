@@ -1,5 +1,4 @@
 from collections import namedtuple
-from itertools import izip
 from functools import partial
 from types import MethodType
 
@@ -38,7 +37,7 @@ class Duration(object):
         self.seconds = self._compute_seconds_value()
 
     def __str__(self):
-        return '<Duration {}>'.format(self.representation)
+        return '<Duration {0}>'.format(self.representation)
 
     def __repr__(self):
         return self.__str__()
@@ -67,7 +66,7 @@ class Duration(object):
         try:
             scales = [DurationRepresentation(float(p[0]), Scale(p[1])) for p in elements]
         except ValueError:
-            raise ScaleFormatError("Malformed duration representation: {}".format(representation))
+            raise ScaleFormatError("Malformed duration representation: {0}".format(representation))
 
         return scales
 
