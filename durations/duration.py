@@ -1,5 +1,4 @@
 from collections import namedtuple
-from itertools import izip
 from functools import partial
 from types import MethodType
 

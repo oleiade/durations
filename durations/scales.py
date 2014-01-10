@@ -1,5 +1,3 @@
-import itertools
-
 from collections import namedtuple
 
 from durations.constants import *

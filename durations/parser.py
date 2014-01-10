@@ -90,4 +90,4 @@ def extract_tokens(representation, separators=SEPARATOR_CHARACTERS):
     # in the elements list
     elements.append(buff)
 
-    return zip(elements[::2], elements[1::2])
+    return list(zip(elements[::2], elements[1::2]))
