@@ -46,7 +46,7 @@ class Scale(object):
         self.conversion_unit = self.SCALES_CONVERTION_UNITS[self.representation.short]
 
     def __str__(self):
-        return '<Scale {}>'.format(self.representation.long_singular)
+        return '<Scale {0}>'.format(self.representation.long_singular)
 
     def __repr__(self):
         return self.__str__()
@@ -64,4 +64,4 @@ class Scale(object):
         for scale in self.SCALES:
             if str_representation in scale:
                 return scale
-        raise ScaleFormatError("Unsupported scale format: {}".format(str_representation))
+        raise ScaleFormatError("Unsupported scale format: {0}".format(str_representation))
