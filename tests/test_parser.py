@@ -1,6 +1,9 @@
 import unittest
 
-from durations.parser import extract_tokens
+from durations.parser import (
+    extract_tokens,
+    valid_token
+)
 
 
 class ParserTest(unittest.TestCase):
@@ -9,6 +12,24 @@ class ParserTest(unittest.TestCase):
 
     def tearDown(self):
         pass
+
+    def test_valid_token_with_valid_scale(self):
+        self.assertTrue(valid_token('d'))
+
+    def test_valid_token_with_invalid_scale(self):
+        self.assertFalse(valid_token('blabla'))
+
+    def test_valid_token_with_valid_digits(self):
+        self.assertTrue(valid_token('12345'))
+
+    def test_valid_token_with_invalid_digits(self):
+        self.assertFalse(valid_token('12a45'))
+
+    def test_valid_token_with_valid_separator_token(self):
+        self.assertTrue(valid_token('and'))
+
+    def test_valid_token_with_invalid_separator_token(self):
+        self.assertFalse(valid_token('adn'))
 
     def test_extract_tokens_simple_valid_scale(self):
         short_tokens = extract_tokens('1h')

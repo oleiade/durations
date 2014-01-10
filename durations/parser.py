@@ -1,3 +1,4 @@
+from durations.scales import Scale
 from durations.exceptions import ScaleFormatError
 from durations.constants import *
 
@@ -18,14 +19,12 @@ def valid_token(token):
     except ScaleFormatError:
         pass
 
-    # If token neither represents a numerical value not a
-    # separator token, it is considered invalid
-    if (not token.isdigit() or
-        not token in SEPARATOR_TOKENS or
-        not is_scale):
-        return False
+    # If token either represents a numerical value, a
+    # separator token, or a scale, it is considered valid
+    if any([token.isdigit(), token in SEPARATOR_TOKENS, is_scale]):
+        return True
 
-    return True
+    return False
 
 
 def compute_char_token(c):
