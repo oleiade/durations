@@ -1,6 +1,10 @@
 from durations.scales import Scale
 from durations.exceptions import ScaleFormatError
 from durations.constants import *
+from durations.exceptions import (
+    ScaleFormatError,
+    InvalidTokenError
+)
 
 
 def valid_token(token):
@@ -55,6 +59,14 @@ def extract_tokens(representation, separators=SEPARATOR_CHARACTERS):
         # the content of the buffer in the elements list
         if c in separators:
             if buff:
+                # If the last found token is invalid,
+                # raise and InvalidTokenError
+                if not valid_token(buff):
+                    raise InvalidTokenError(
+                        "Duration representation {} contains "
+                        "an invalid token: {}".format(representation, buff)
+                    )
+
                 # If buffer content is a separator word, for example
                 # "and", just ignore it
                 if not buff.strip() in SEPARATOR_TOKENS:

@@ -1,5 +1,6 @@
 import unittest
 
+from durations.exceptions import InvalidTokenError
 from durations.parser import (
     extract_tokens,
     valid_token
@@ -100,3 +101,6 @@ class ParserTest(unittest.TestCase):
         self.assertEqual(mixed_short_tokens, [('2', 'd'), ('24', 'h')])
         self.assertEqual(mixed_long_tokens, [('2', 'days'), ('24', 'hours')])
 
+    def test_extract_tokens_with_invalid_token_raises(self):
+        with self.assertRaises(InvalidTokenError):
+            extract_tokens('2blabla and 24h')
