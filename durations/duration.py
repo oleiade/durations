@@ -3,8 +3,9 @@ from itertools import izip
 from functools import partial
 from types import MethodType
 
-from durations.exceptions import ScaleFormatError
+from durations.parser import extract_tokens
 from durations.scales import Scale
+from durations.exceptions import ScaleFormatError
 from durations.constants import *
 
 
@@ -50,50 +51,6 @@ class Duration(object):
 
         return seconds
 
-    def compute_char_token(self, c):
-        if c.isdigit():
-            return SCALE_TOKEN_DIGIT
-        elif c.isalpha():
-            return SCALE_TOKEN_ALPHA
-
-        return None
-
-    def extract_tokens(self, representation, separators=SEPARATOR_CHARACTERS):
-        buff = ""
-        elements = []
-        last_index = 0
-        last_token = None
-
-        for index, c in enumerate(representation):
-            # if separator character is found, push
-            # the content of the buffer in the elements list
-            if c in separators:
-                if buff:
-                    # If buffer content is a separator word, for example
-                    # "and", just ignore it
-                    if not buff.strip() in SEPARATOR_TOKENS:
-                        elements.append(buff)
-
-                # Anyway, reset buffer and last token marker
-                # to their zero value
-                buff = ""
-                last_token = None
-            else:
-                token = self.compute_char_token(c)
-                if (token is not None and last_token is not None and token != last_token):
-                    elements.append(buff)
-                    buff = c
-                else:
-                    buff += c
-
-                last_token = token
-
-        # push the content left in representation
-        # in the elements list
-        elements.append(buff)
-
-        return zip(elements[::2], elements[1::2])
-
     def parse(self, representation):
         """Parses a duration string representation
 
@@ -105,7 +62,7 @@ class Duration(object):
         :returns: the parsed duration representation
         :rtype: DurationRepresentation
         """
-        elements = self.extract_tokens(representation)
+        elements = extract_tokens(representation)
 
         try:
             scales = [DurationRepresentation(float(p[0]), Scale(p[1])) for p in elements]
